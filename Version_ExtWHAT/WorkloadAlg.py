@@ -362,18 +362,41 @@ def PrintProductionTargets(Products,tau_value,optimal):
     
    print('   _____________________________________________________')
    print('   >> WHAT Model results: Production Targets..')
-
+   
+   # product.array = []
+    
    for product in Products.values():
        total = 0
        prodreqstr = product.PN+': '
+       product.array = []
        for day in range(tau_value): 
            
            if optimal: 
                productval = product.ProductionVars[day].x
+               product.array.append(product.ProductionVars[day].x)
+               # print(product.array.append)
            else:
                productval = product.ProductionVars[day].xn
+               product.array.append(product.ProductionVars[day].xn)
+               # print(product.array.append)
            prodreqstr+=','+str(round(productval,0))
            total+=productval
        if total > 0:
            print('     >'+prodreqstr) 
+           # print('     >'+product.PN, product.array)
+           # print(product.array)
+           
+           # xpoints = np.array([0, 6])
+           # ypoints = np.array(product.array)
+
+           # plt.plot(xpoints, ypoints)
+           # plt.plot(ypoints)
+           plt.bar([1, 2, 3, 4, 5], product.array)
+           plt.show()
+
+           
+           
 ###################################################################################################          
+
+
+

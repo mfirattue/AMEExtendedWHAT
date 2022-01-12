@@ -346,6 +346,7 @@ def WriteMachineCapacityUse(WorkCenters,tau_value,timeGranularity,optimal):
         
          row = 'WorkCnt'+','+'MachGroup'+','+'Day'+','+'Use'+','+'Capacity'+"\n"    
          output.write(row)
+         print(output.write(row))
         
                 
         
