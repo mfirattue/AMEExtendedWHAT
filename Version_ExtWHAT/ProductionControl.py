@@ -18,7 +18,6 @@ import time
 
 
 from WorkloadAlg import ConstrucMILPModel,SolveWhatModel,WriteWhatSolution
-from ProductionScheduling import ScheduleProduction
 from InputReader import InitializeAMEProductionSystem,InitializeAMEProducts,InitializeAMEOrders
 
 from datetime import datetime
@@ -65,19 +64,14 @@ def RunProductionControl(instance, Date):
     print('   >> Model construction in ',round((time.time()-WorkloadFindingStart),2),'secs.')
      
     Acceptedorders = SolveWhatModel(primal,TimeConvention[1],TimeConvention[0],TimeLimit,tau_Value,OrdersInModel,AMEProducts,CustomerTolerance,AMEWorkCenters,timeGranularity)
-    print('   >> Workload optimization is completed  in ',round((time.time()-WorkloadFindingStart),2),'secs.')
-    print()
-    print('<----------------- PLANNING PHASE 2: Production Scheduling ----------------->')
-
+  
 
     ########################################## production scheduling ##################################################
     start_time = time.time()
     
     
     
-    AMEOrders, AMEJobs,incumbentSol, Nodes = ScheduleProduction(AMEWorkCenters,AMEOrders,Acceptedorders, tau_Value, timeGranularity,horizonExtension)
-    print('   >>> Production scheduling completed  in ',round((time.time()-start_time),2),'secs.')
-    return AMEOrders, AMEJobs, incumbentSol, Nodes
+    return AMEOrders
 
 ######## DO NOT CHANGE ANY CODE IN BETWEEN THESE LINES ########
 
@@ -92,7 +86,7 @@ TimeGranularity = 120 # Multiple of TimeGranularity should be a equal to 1440
 ############################## start run #################################################
 starttime = time.time()
 instance = [TimeHorizon,HorizonExtension,TimeGranularity]
-AMEOrders, AMEJobs, incumbentSol, Nodes = RunProductionControl(instance, Date)
+AMEOrders = RunProductionControl(instance, Date)
 print('>>> Total computation time: ', round(time.time() - starttime,3),' secs.')
 
 

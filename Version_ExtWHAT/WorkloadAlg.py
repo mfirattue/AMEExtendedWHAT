@@ -18,10 +18,8 @@ import gurobipy as grb
 import math
 import time
 from datetime import datetime
-# from Objects.ProductionObjects import Product,Workcenter,Machine
-from Objects.PlanningObjects import AMEOrder,AMETask
 from OutputWriter import WriteMachineCapacityUse
-from ProductionScheduling import CreateTask
+
 
 
 def ConstrucMILPModel(AllOrders,Products,WorkCenters,CustomerTolerance, tau_value, timeGranularity):
