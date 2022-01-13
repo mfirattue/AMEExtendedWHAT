@@ -6,6 +6,11 @@ Created on Mon May 24 17:52:37 2021
 """
 import pandas as pd
 from datetime import datetime
+import matplotlib.pyplot as plt
+import numpy as np
+
+import matplotlib
+import seaborn as sns
 
 def WriteHowSolution_1(Workcenters):
 
@@ -363,27 +368,49 @@ def WriteMachineCapacityUse(WorkCenters,tau_value,timeGranularity,optimal):
                  for mach in myMachSubset.Machines:  
                      subsetstr+='-'+mach.Name
                  print('    -> Workcenter ',workcnt.Name,', Machine group',subsetstr,':' )
-                    
-                 for day in range(tau_value):      
-                     totalcap += sum([machine.OnTimeGivenDay(day, timeGranularity) for machine in myMachSubset.Machines])    
+                 workcnt.subsetstr_use = [] 
+                 workcnt.subsetstr_cap = []
+                 
+                 for day in range(tau_value):
+                                                      
+                     totalcap += sum([machine.OnTimeGivenDay(day, timeGranularity) for machine in myMachSubset.Machines])
+                     workcnt.subsetstr_cap.append(totalcap)
+                     # print('maximale capaciteit', workcnt.subsetstr_cap)
                      if optimal:
                          totaluse = sum( usepair[0]*usepair[1].x  for usepair in myMachSubset.CapacityUseVars[day])
+                         workcnt.subsetstr_use.append(round(totaluse,2))
+                         
                      else: 
                          totaluse = sum( usepair[0]*usepair[1].xn  for usepair in myMachSubset.CapacityUseVars[day])
+                         workcnt.subsetstr_use.append(round(totaluse,2))
+                                                 
                      row = str(workcnt.Name)+','+str(subsetstr)+','+str(day+1)+','+str(round(totaluse,2))+','+str(round(totalcap,2))     
                      row += "\n"
                      output.write(row)
                      print('     > Day',(day+1),': ',round(totaluse,2),'<= ',round(totalcap,2))
-                    
+                     # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use, workcnt.subsetstr_cap)
                
                  subsetid+=1 
+                 # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use)   
                      
-                     
+                 # fig, ax1 = plt.subplots(figsize=(10,6))
+                 # color = 'tab:green'
+                 # ax1.set_title('Resources use versus capacity', fontsize=16)
+                 # ax1.set_xlabel('Day', fontsize=16)
+                 # ax1.set_ylabel('Capacity in hours??', fontsize=16, color=color)
+                 # ax2 = sns.barplot(workcnt.subsetstr_use)
+                 # ax1.tick_params(axis='y')
+                 # ax2 = ax1.twinx()
+                 # color = 'tab:red'
+                 # ax2.set_ylabel('Avg Percipitation %', fontsize=16, color=color)
+                 # ax2 = sns.lineplot(workcnt.subsetstr_cap)
+                 # ax2.tick_params(axis='y', color=color)
+                 # plt.show()
+                 
+        
+           
 
-
-     return      
-
-    
+     return
     
     
     
