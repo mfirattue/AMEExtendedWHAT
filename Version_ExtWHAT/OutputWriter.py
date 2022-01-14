@@ -391,25 +391,24 @@ def WriteMachineCapacityUse(WorkCenters,tau_value,timeGranularity,optimal):
                      # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use, workcnt.subsetstr_cap)
                
                  subsetid+=1 
-                 # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use)   
-                     
-                 # fig, ax1 = plt.subplots(figsize=(10,6))
-                 # color = 'tab:green'
-                 # ax1.set_title('Resources use versus capacity', fontsize=16)
-                 # ax1.set_xlabel('Day', fontsize=16)
-                 # ax1.set_ylabel('Capacity in hours??', fontsize=16, color=color)
-                 # ax2 = sns.barplot(workcnt.subsetstr_use)
-                 # ax1.tick_params(axis='y')
-                 # ax2 = ax1.twinx()
-                 # color = 'tab:red'
-                 # ax2.set_ylabel('Avg Percipitation %', fontsize=16, color=color)
-                 # ax2 = sns.lineplot(workcnt.subsetstr_cap)
-                 # ax2.tick_params(axis='y', color=color)
-                 # plt.show()
+                 # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use, workcnt.subsetstr_cap)   
+                
+                 x = [1, 2, 3, 4, 5]
+                 y = workcnt.subsetstr_use
+                 y2 = workcnt.subsetstr_cap
+                 fig, ax = plt.subplots()
+                 ax.plot(x, y)
+                 ax.plot(x, y2) 
+                 title = subsetstr
+                 ax.set_title(title)
+                 ax.set_ylabel("Minutes")
+                 ax.set_xlabel("Day")
+                 plt.gca().legend(('Resources used','Max capacity'))
+                 plt.show()
+                 
                  
         
            
-
      return
     
     
