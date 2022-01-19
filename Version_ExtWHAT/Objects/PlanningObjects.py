@@ -399,6 +399,7 @@ class AMETask:
         self.myOrder = myOrder
         self.Predecessors = []
         self.Successors = []
+        self.RawMaterials = []
         
         self.PredstoComplete = []
         self.jobproctime = 0

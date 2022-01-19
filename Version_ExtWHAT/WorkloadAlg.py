@@ -202,6 +202,27 @@ def UpdateStockLevelCons(refday,theta,quantity,primal,product, timeGranularity):
     return
 
 ###########################################################################################################
+ 
+# def UpdateRawMaterialsStockLevelCons(refday,theta,quantity,primal,product, timeGranularity):
+#     # print('refday: ', refday)
+    
+#      # I_{i_t} = I_{i_t-1} + \alpha_{i,0}*q_{o,t}*\theta_{o,t}, here    
+     
+#     primal.chgCoeff(product.TargetStockCons[int(refday)],theta,-quantity)
+#     CumulativeDays = 0
+#     for operation in product.Operations:
+#         currentshift = operation.ProcessTime*quantity+ operation.SetupTime*(quantity/product.AvgBatch)
+#         MachineOnTime = ((operation.OperationType.AlternativeMachines[0].UpTimePerDay*60)//timeGranularity)*timeGranularity
+#         CumulativeDays += currentshift/MachineOnTime
+        
+
+#     for myProd, Multiplier in product.Predecessors:
+#         predquantity = Multiplier*quantity*(1+myProd.ScrapRate)
+#         UpdateStockLevelCons(refday-CumulativeDays,theta,predquantity,primal,myProd,timeGranularity)
+
+#     return
+
+###########################################################################################################
 
 
 #############################################################################################################

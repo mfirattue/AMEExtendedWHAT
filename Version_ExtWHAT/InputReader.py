@@ -62,7 +62,7 @@ def InitializeAMEProductionSystem(ResourceFile,RouteFile,timeGranularity):
         myOnTimePerDay = data_Resources.loc[index]['OnTimePerDay']      
         resourcetype = data_Resources.loc[index]['Resource_Type']
        
-        # myopr is a list and we have t iterate this list to fill operations of mahine or equipment. 
+        # myopr is a list and we have to iterate this list to fill operations of mahine or equipment. 
         
         if resourcetype == 'machine':                
             mymachine = AMEMachine(myWorkCnt,myName,myOprs,myUtil,myAvailability,myOnTimePerDay)
@@ -297,10 +297,16 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
       
         for pred in preds:      
             if pred[0] in ProductDict:
-                ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))                    
+                ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))
+                # print(ProductDict[PN].Predecessors)                   
             else:
                 print('ERROR: Pred ',pred[0],' pf prod ',ProductDict[PN].PN,' does -not- exist in the list')
-                
+        
+        for pred in preds:
+            if len(pred) == 0:
+                ProductDict[PN].Predecessors.remove(pred) and ProductDict[PN].RawMaterials.append(pred)
+            else:
+                continue
                 
   
     print('   >> No.Products: ',len(ProductDict))

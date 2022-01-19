@@ -240,4 +240,8 @@ class AMEProduct:
         self.TargetStockCons = []
         
         self.TargetLevels = []
-
+        
+    # def getRawMaterials(self):
+    #     for pred in Predecessors:
+    #         if len(Predecessors) == 0:
+    #             Predecessors = RawMaterials
