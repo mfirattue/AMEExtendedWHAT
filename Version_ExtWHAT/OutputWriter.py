@@ -393,18 +393,18 @@ def WriteMachineCapacityUse(WorkCenters,tau_value,timeGranularity,optimal):
                  subsetid+=1 
                  # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use, workcnt.subsetstr_cap)   
                 
-                 x = [1, 2, 3, 4, 5]
-                 y = workcnt.subsetstr_use
-                 y2 = workcnt.subsetstr_cap
-                 fig, ax = plt.subplots()
-                 ax.plot(x, y)
-                 ax.plot(x, y2) 
-                 title = subsetstr
-                 ax.set_title(title)
-                 ax.set_ylabel("Minutes")
-                 ax.set_xlabel("Day")
-                 plt.gca().legend(('Resources used','Max capacity'))
-                 plt.show()
+                 # x = [1, 2, 3, 4, 5]
+                 # y = workcnt.subsetstr_use
+                 # y2 = workcnt.subsetstr_cap
+                 # fig, ax = plt.subplots()
+                 # ax.plot(x, y)
+                 # ax.plot(x, y2) 
+                 # title = subsetstr
+                 # ax.set_title(title)
+                 # ax.set_ylabel("Minutes")
+                 # ax.set_xlabel("Day")
+                 # plt.gca().legend(('Resources used','Max capacity'))
+                 # plt.show()
                  
                  
         

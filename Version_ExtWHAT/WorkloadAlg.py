@@ -405,15 +405,15 @@ def PrintProductionTargets(Products,tau_value,optimal):
        if total > 0:
            print('     >'+prodreqstr)            
                               
-           fig = plt.figure()
-           ax = fig.add_axes([0,0,1,1])
-           xaxis = [1, 2, 3, 4, 5]
-           ax.bar(xaxis, product.array)
-           title = "Production target for PN"+ product.PN
-           ax.set_title(title)
-           ax.set_ylabel("Number of PN's")
-           ax.set_xlabel("Day")
-           plt.show()
+           # fig = plt.figure()
+           # ax = fig.add_axes([0,0,1,1])
+           # xaxis = [1, 2, 3, 4, 5]
+           # ax.bar(xaxis, product.array)
+           # title = "Production target for PN"+ product.PN
+           # ax.set_title(title)
+           # ax.set_ylabel("Number of PN's")
+           # ax.set_xlabel("Day")
+           # plt.show()
            
                   
            

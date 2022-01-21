@@ -78,7 +78,7 @@ def RunProductionControl(instance, Date):
 
 ############################## Parameters ############################################
 # for date see input file names
-Date = 20210301
+Date = 20210301 #nietveranderen
 TimeHorizon = 5
 HorizonExtension = 3 # In case of a to small horizon extension the greedy scheduling model will fail
 TimeGranularity = 120 # Multiple of TimeGranularity should be a equal to 1440

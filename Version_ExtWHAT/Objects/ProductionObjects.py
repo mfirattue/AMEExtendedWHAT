@@ -212,16 +212,14 @@ class AMEOperation:
         self.SetupTime = list(self.ExecutionInfo.values())[0][1]
 
 
-
-
 class AMEProduct:
     # Initializer / Instance Attributes
     def __init__(self,myPN,myWokrcnt,myGroup,myProcessRoute,minbatch,maxbatch,avgbatch, myScrapRate, StockLevel):
         self.PN = myPN
         self.WorkCenter = myWokrcnt
-        self.Predecessors = [] # list of (product,multiplier)
+        self.Predecessors = [] # list of tuples (product,multiplier) met lists
         self.Operations = []
-        self.RawMaterials = [] # list of (rawmaterial,quantity)
+        self.RawMaterials = [] # list of tuples (rawmaterial (PN), multiplier)
         self.ProductGroup = myGroup
         self.ProcessRoute = myProcessRoute
         self.AvgBatch = avgbatch
@@ -240,8 +238,3 @@ class AMEProduct:
         self.TargetStockCons = []
         
         self.TargetLevels = []
-        
-    # def getRawMaterials(self):
-    #     for pred in Predecessors:
-    #         if len(Predecessors) == 0:
-    #             Predecessors = RawMaterials
