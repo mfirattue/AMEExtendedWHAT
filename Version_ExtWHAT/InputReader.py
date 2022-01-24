@@ -292,57 +292,30 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
     # new_data_Products = data_Products.set_index('PN')
     new_data_Products = data_Products
     # print("This is the new data set", new_data_Products.info())
+    
     # print("This is de current data set", data_Products.info())
     #set de PN als index, set column as index, nieuwe tabel maken.
     # A second pass for setting predecessors and raw materials of products
+    
     for index in range(0, len(new_data_Products)):
         PN = new_data_Products.loc[index]['PN']
         preds = ast.literal_eval(new_data_Products.loc[index]['Predecessors'])
-        print(PN, preds, len(preds))
+        # print(PN, preds, len(preds))
         if len(preds) == 0:
             ProductDict[PN].RawMaterials.append(ProductDict[PN])
-            print("raw material", ProductDict[PN].RawMaterials)
+        else:
             for pred in preds:
-                print("ik ben een predecessor", pred)
-            # ProductDict[PN].Predecessors.append((ProductDict[preds[0]],int(preds[1])))
-            # print("predecessor", ProductDict[PN].Predecessors)
-                
-        
-        
-        
-        
-        
-        
-        # for pred in preds:
-        #     # print(pred, len(pred))
-        #     if len(pred) == 0:
-        #         ProductDict[PN].RawMaterials.append((ProductDict[pred[0]],int(pred[1])))
-        #         print("raw material", ProductDict[PN].RawMaterials)
-        #     else:
-        #         ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))
-        #         # print("predecessor", ProductDict[PN].Predecessors)
+                if pred[0] in ProductDict:
+                    ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))
+                    print(ProductDict[PN].Predecessors)
                 
                 
-                
-    # for index in range(0, len(data_Products)):
-    #     PN = data_Products.loc[index]['PN']
-    #     preds = ast.literal_eval(data_Products.loc[index]['Predecessors'])
-        
-    #     for pred in preds:      
-    #         print(pred)
-    #         if pred[0] in ProductDict:
-    #             #if statement welke controleert of pred[0] een lengte van predecessor heeft van lengte 0
-    #             ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))
-    #             # print(ProductDict[PN].Predecessors)                   
-    #         else:
-    #             print('ERROR: Pred ',pred[0],' pf prod ',ProductDict[PN].PN,' does -not- exist in the list')
-                
-  
     print('   >> No.Products: ',len(ProductDict))
-    # print('   >> No. Raw Materials : ',len(ProductDict))
-    
+    print('   >> No. Raw Materials : ',len(ProductDict))
+          
     print('   >> Products with stock information', counter_wel)
-    return ProductDict      
+    return ProductDict    
+                     
         
         
 ###################################################################################################  
