@@ -306,15 +306,14 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
    
     
     for product in ProductDict.values():
-        PN = product.PN
+        RawPN = product.PN+"_rw"
         if len(product.Predecessors) == 0:
-            if PN+'_rw' in RawMaterialDict:
-                product.RawMaterials.append(RawMaterialDict[PN+'_rw'])
-                RawMaterialDict[PN+'_rw'].RequiringProducts.append((product, 1))
+            if RawPN in RawMaterialDict:
+                product.RawMaterials.append(RawMaterialDict[RawPN])
+                RawMaterialDict[RawPN].RequiringProducts.append((product, 1))
             else:
-                rawmaterial = AMERawMaterial(PN+'_rw',product.WorkCenter, 1) #1 is multiplier
-            
-                RawMaterialDict[PN+'_rw'] = rawmaterial
+                rawmaterial = AMERawMaterial(RawPN,product.WorkCenter, 1) #1 is multiplier
+                RawMaterialDict[RawPN] = rawmaterial
                 product.RawMaterials.append(rawmaterial)
                 rawmaterial.RequiringProducts.append((product, 1))
                 

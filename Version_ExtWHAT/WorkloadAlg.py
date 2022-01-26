@@ -150,7 +150,8 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
             product.SetupCons.append(primal.addConstr(prodvar <= product.AvgBatch*setupvar, stname))
             
             cname = 'Tgt_Prod_'+str(product.PN)+"_"+str(day)
-            primal.addConstr(targetvar <= product.StockLevel + prodvar, cname)
+            #primal.addConstr(targetvar <= product.StockLevel + prodvar, cname)
+            primal.addConstr(targetvar <= prodvar, cname)
             
             # Here we initialize production target level constraints for each product
             cname = 'Consvr'+str(product.PN)+"_"+str(day)
@@ -221,7 +222,11 @@ def UpdateStockLevelCons(refday,theta,quantity,primal,product, timeGranularity):
         
 
     for myProd, Multiplier in product.Predecessors:
+      
         predquantity = Multiplier*quantity*(1+myProd.ScrapRate)
+        if myProd.PN == "6808-1500-5305":
+            print("Prod",product.PN,", pred: ",myProd.PN,", mult: ",predquantity,", day :",refday-CumulativeDays)
+            
         UpdateStockLevelCons(refday-CumulativeDays,theta,predquantity,primal,myProd,timeGranularity)
 
     return
@@ -412,24 +417,33 @@ def PrintProductionTargets(Products,tau_value,optimal):
        
    for product in Products.values():
        total = 0
-       prodreqstr = product.PN+': '
+       trgtotal = 0
+       prodreqstr = "Prod, "+product.PN+': '
+       trgreqstr =  "Target, "+product.PN+': '
        product.array = []
        for day in range(tau_value): 
            
            if optimal: 
                productval = product.ProductionVars[day].x
                product.array.append(round(product.ProductionVars[day].x, 2))
+               targetval = product.TargetVars[day].x
+            
                # print(product.array.append)
                
            else:
                productval = product.ProductionVars[day].xn
                product.array.append(round(product.ProductionVars[day].xn, 2))
+               targetval = product.TargetVars[day].xn
                # print(product.array.append)
                
            prodreqstr+=','+str(round(productval,0))
+           trgreqstr+=','+str(round(targetval,0))
+           trgtotal +=targetval
            total+=productval
        if total > 0:
-           print('     >'+prodreqstr)            
+           print('     >'+prodreqstr)   
+       # if trgtotal > 0:
+       #     print('     >'+trgreqstr)
                               
 
 def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
@@ -440,7 +454,7 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
    for rawmaterial in RawMaterials.values():
        total = 0
        rawreqstr = rawmaterial.PN+': '
-       #print(rawreqstr,len(rawmaterial.TargetVars))
+
        rawmaterial.TargetLevels.clear()
        for day in range(tau_value): 
            rawval = 0
