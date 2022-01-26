@@ -114,6 +114,11 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
         #\sum_{t} \theta_{o,t} + r_o >= 1
         order.Constraints.append(primal.addConstr(sum(order.ShiftVars) + order.RejectVar >= 1,cname))
         
+        
+          
+                
+             
+        
     for product in Products.values():
         
         for day in range(tau_value):
@@ -160,6 +165,26 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 constraint = primal.addConstr(product.TargetVars[-1]  == 0, cname)
                 product.TargetStockCons.append(constraint)
                 
+                
+    for rawmaterial in RawMaterials.values():
+        
+          for day in range(tau_value):
+              
+                levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
+                rawmaterial.TargetVars.append(levelvar)
+             
+                # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t}, 
+                stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day)
+                rawmatcons = primal.addConstr(0 <= levelvar, stname)
+                rawmaterial.TargetStockCons.append(rawmatcons)
+            
+                for (product,multiplier) in rawmaterial.RequiringProducts:
+                      primal.chgCoeff(rawmatcons,product.ProductionVars[day],multiplier)
+                    
+                
+                
+                
+        
 
     for order in Orders.values():
         rend = min(order.Deadline+CustomerTolerance, tau_value-1)

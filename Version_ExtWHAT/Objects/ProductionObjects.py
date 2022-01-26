@@ -252,6 +252,6 @@ class AMERawMaterial:
         
         self.QualitypastRate = QualitypastRate
         self.TargetVars = [] #for every time step, level decision variable
-        self.TargetStockConstr = [] #
+        self.TargetStockCons = [] #
         self.TargetLevels = []      #advice levels
         
