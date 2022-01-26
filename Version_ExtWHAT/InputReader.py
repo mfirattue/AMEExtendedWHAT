@@ -309,6 +309,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 RawMaterialDict[PN+'_rw'].RequiringProducts.append((ProductDict[PN], 1))
             else:
                 rawmaterial = AMERawMaterial(PN+'_rw',ProductDict[PN].WorkCenter, 1) #1 is multiplier
+            
                 RawMaterialDict[PN+'_rw'] = rawmaterial
                 ProductDict[PN].RawMaterials.append(rawmaterial)
                 rawmaterial.RequiringProducts.append((ProductDict[PN], 1))
