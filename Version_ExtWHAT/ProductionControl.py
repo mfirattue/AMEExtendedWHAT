@@ -46,7 +46,7 @@ def RunProductionControl(instance, Date):
     AMEWorkCenters = InitializeAMEProductionSystem(prodsysfile,procroutefile,timeGranularity)
     print('-------------------------------------------------------------')
     print('>>> Initializing Products..')
-    AMEProducts = InitializeAMEProducts(AMEWorkCenters,AMEProductFile,AMEStockFile,Date)
+    AMEProducts, AMERawMaterials = InitializeAMEProducts(AMEWorkCenters,AMEProductFile,AMEStockFile,Date)
     print('-------------------------------------------------------------')
     print('>>> Initializing Orders..')
     AMEOrders = InitializeAMEOrders(AMEProducts,AMEOrderFile)
@@ -61,7 +61,7 @@ def RunProductionControl(instance, Date):
     print('<----------------- PLANNING PHASE 1: Workload Optimization ----------------->')
     
     print('>>Time Limit:',TimeLimit,' sec., Tau =',tau_Value,' days., Customer Tolerance:',CustomerTolerance,' days')
-    primal,timelength_day,OrdersInModel,AMEProducts = ConstrucMILPModel(AMEOrders,AMEProducts,AMEWorkCenters,CustomerTolerance, tau_Value, timeGranularity)
+    primal,timelength_day,OrdersInModel,AMEProducts = ConstrucMILPModel(AMEOrders,AMEProducts, AMERawMaterials, AMEWorkCenters,CustomerTolerance, tau_Value, timeGranularity)
     print('   >> Model construction in ',round((time.time()-WorkloadFindingStart),2),'secs.')
      
     Acceptedorders = SolveWhatModel(primal,TimeConvention[1],TimeConvention[0],TimeLimit,tau_Value,OrdersInModel,AMEProducts,CustomerTolerance,AMEWorkCenters,timeGranularity)

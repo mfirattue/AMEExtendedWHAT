@@ -22,7 +22,7 @@ from OutputWriter import WriteMachineCapacityUse
 
 
 
-def ConstrucMILPModel(AllOrders,Products,WorkCenters,CustomerTolerance, tau_value, timeGranularity):
+def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTolerance, tau_value, timeGranularity):
     "In this function the MILP model is constructed"
     "The numbers of the constraints are identified with Constraint (X). The 'cname' constraint name is based on an older version of the numbering"
     primal = grb.Model("AME_WHAT")

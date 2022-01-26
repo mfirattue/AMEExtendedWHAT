@@ -219,13 +219,14 @@ class AMEProduct:
         self.WorkCenter = myWokrcnt
         self.Predecessors = [] # list of tuples (product,multiplier) met lists
         self.Operations = []
-        self.RawMaterials = [] # list of tuples (rawmaterial (PN), multiplier)
+        self.RawMaterials = [] # list of tuples (rawmaterial (PN), multiplier), 1 of 0 (boolean)
         self.ProductGroup = myGroup
         self.ProcessRoute = myProcessRoute
         self.AvgBatch = avgbatch
         self.MinBatch = minbatch
         self.MaxBatch = maxbatch
         self.StockLevel = StockLevel
+        #self.StockLevel = []
         # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
         
         self.ScrapRate = myScrapRate
@@ -237,4 +238,20 @@ class AMEProduct:
         self.SetupCons = []
         self.TargetStockCons = []
         
-        self.TargetLevels = []
+        self.TargetLevels = [] #advice levels
+    
+class AMERawMaterial:
+    # Initializer / Instance Attributes
+    def __init__(self, myPN, myWokrcnt, QualitypastRate):
+        self.PN = myPN
+        self.WorkCenter = myWokrcnt
+        self.StockLevels = [] #fixed values
+        self.RequiringProducts = [] #Tuples (Pn, multiplier)
+        
+        # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
+        
+        self.QualitypastRate = QualitypastRate
+        self.TargetVars = [] #for every time step, level decision variable
+        self.TargetStockConstr = [] #
+        self.TargetLevels = []      #advice levels
+        

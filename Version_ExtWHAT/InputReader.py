@@ -6,7 +6,7 @@ Created on Mon May 24 17:56:54 2021
 """
 import pandas as pd
 
-from Objects.ProductionObjects import AMEWorkcenter,AMEMachine,AMEProduct,AMEOperation,AMEOperationType, Equipment,Worker
+from Objects.ProductionObjects import AMEWorkcenter,AMEMachine,AMEProduct, AMERawMaterial, AMEOperation,AMEOperationType, Equipment,Worker
 from Objects.PlanningObjects import AMEOrder
 from PreProcessing import UpdateMachineSubsets,PrintMachineGroup,UpdateOprMachines,FindIncludingMachineSubSets
 
@@ -193,6 +193,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
     data_StockLevels['StockLevel'] = data_StockLevels['StockLevel'].astype(int)
     data_StockLevels.set_index('PN')
     ProductDict = {}
+    RawMaterialDict = {}
     
     
     
@@ -289,6 +290,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
          
         ProductDict[PN]=myprod
 
+
     # new_data_Products = data_Products.set_index('PN')
     new_data_Products = data_Products
     # print("This is the new data set", new_data_Products.info())
@@ -302,19 +304,22 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
         preds = ast.literal_eval(new_data_Products.loc[index]['Predecessors'])
         # print(PN, preds, len(preds))
         if len(preds) == 0:
-            ProductDict[PN].RawMaterials.append(ProductDict[PN])
-        else:
-            for pred in preds:
-                if pred[0] in ProductDict:
-                    ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))
-                    print(ProductDict[PN].Predecessors)
+            if PN+'_rw' in RawMaterialDict:
+                ProductDict[PN].RawMaterials.append(RawMaterialDict[PN+'_rw'])
+                RawMaterialDict[PN+'_rw'].RequiringProducts.append((ProductDict[PN], 1))
+            else:
+                rawmaterial = AMERawMaterial(PN+'_rw',ProductDict[PN].WorkCenter, 1) #1 is multiplier
+                RawMaterialDict[PN+'_rw'] = rawmaterial
+                ProductDict[PN].RawMaterials.append(rawmaterial)
+                rawmaterial.RequiringProducts.append((ProductDict[PN], 1))
                 
+                                
                 
     print('   >> No.Products: ',len(ProductDict))
-    print('   >> No. Raw Materials : ',len(ProductDict))
+    print('   >> No. Raw Materials : ',len(RawMaterialDict))
           
     print('   >> Products with stock information', counter_wel)
-    return ProductDict    
+    return ProductDict, RawMaterialDict
                      
         
         
