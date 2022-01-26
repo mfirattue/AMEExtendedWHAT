@@ -171,8 +171,9 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
         
           for day in range(tau_value):
               
-                levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
+                levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,obj = 1,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
                 rawmaterial.TargetVars.append(levelvar)
+                
              
                 # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t}, 
                 stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day)
@@ -181,7 +182,10 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
             
                 for (product,multiplier) in rawmaterial.RequiringProducts:
                       primal.chgCoeff(rawmatcons,product.ProductionVars[day],-multiplier)
-                    
+                      
+          for i in range(len(rawmaterial.StockLevels)):
+               rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i]
+                     
                 
                 
                 

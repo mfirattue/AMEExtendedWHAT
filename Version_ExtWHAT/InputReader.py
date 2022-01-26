@@ -5,6 +5,7 @@ Created on Mon May 24 17:56:54 2021
 @author: VAIO
 """
 import pandas as pd
+import random
 
 from Objects.ProductionObjects import AMEWorkcenter,AMEMachine,AMEProduct, AMERawMaterial, AMEOperation,AMEOperationType, Equipment,Worker
 from Objects.PlanningObjects import AMEOrder
@@ -313,6 +314,15 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 RawMaterialDict[RawPN].RequiringProducts.append((product, 1))
             else:
                 rawmaterial = AMERawMaterial(RawPN,product.WorkCenter, 1) #1 is multiplier
+                
+                # here we define only for three days the raw material level
+                day1level = product.StockLevel
+                rawmaterial.StockLevels.append(int(day1level))
+                day2level = (1+0.1*random.random())*day1level
+                rawmaterial.StockLevels.append(int(day2level))
+                day3level = (1+0.1*random.random())*day2level
+                rawmaterial.StockLevels.append(int(day3level))
+                
                 RawMaterialDict[RawPN] = rawmaterial
                 product.RawMaterials.append(rawmaterial)
                 rawmaterial.RequiringProducts.append((product, 1))
