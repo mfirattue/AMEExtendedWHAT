@@ -203,7 +203,7 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
             
     primal.update()
     
-    #primal.write('LPFiles/ExtendedWHAT.lp')
+    primal.write('LPFiles/ExtendedWHAT.lp')
 
     return [primal,tau_value,Orders,Products]
 ##############################################################################################    
@@ -457,7 +457,8 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
            rawreqstr+=','+str(round(rawval,0))
            total+=rawval
        if total > 0:
-           print('     >'+rawreqstr)            
+           print('     >'+rawreqstr)     
+           
                               
            # fig = plt.figure()
            # ax = fig.add_axes([0,0,1,1])
