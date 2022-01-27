@@ -315,7 +315,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 
                                 
                 
-    print('   >> No.Products: ',len(ProductDict))
+    print('   >> No. Products: ',len(ProductDict))
     print('   >> No. Raw Materials : ',len(RawMaterialDict))
           
     print('   >> Products with stock information', counter_wel)
