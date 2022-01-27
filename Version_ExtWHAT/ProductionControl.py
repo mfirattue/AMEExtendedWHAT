@@ -63,8 +63,8 @@ def RunProductionControl(instance, Date):
     print('>>Time Limit:',TimeLimit,' sec., Tau =',tau_Value,' days., Customer Tolerance:',CustomerTolerance,' days')
     primal,timelength_day,OrdersInModel,AMEProducts = ConstrucMILPModel(AMEOrders,AMEProducts, AMERawMaterials, AMEWorkCenters,CustomerTolerance, tau_Value, timeGranularity)
     print('   >> Model construction in ',round((time.time()-WorkloadFindingStart),2),'secs.')
-     
-    Acceptedorders = SolveWhatModel(primal,TimeConvention[1],TimeConvention[0],TimeLimit,tau_Value,OrdersInModel,AMEProducts,CustomerTolerance,AMEWorkCenters,timeGranularity)
+    print((len(AMERawMaterials)))
+    Acceptedorders = SolveWhatModel(primal,TimeConvention[1],TimeConvention[0],TimeLimit,tau_Value,OrdersInModel,AMEProducts,AMERawMaterials,CustomerTolerance,AMEWorkCenters,timeGranularity)
   
 
     ########################################## production scheduling ##################################################

@@ -249,9 +249,9 @@ class AMERawMaterial:
         self.RequiringProducts = [] #Tuples (Pn, multiplier)
         
         # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
-        
+    
         self.QualitypastRate = QualitypastRate
         self.TargetVars = [] #for every time step, level decision variable
-        self.TargetStockConstr = [] #
+        self.TargetStockCons = [] #
         self.TargetLevels = []      #advice levels
         

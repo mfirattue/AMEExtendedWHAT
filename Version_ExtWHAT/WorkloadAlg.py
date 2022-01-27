@@ -114,6 +114,11 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
         #\sum_{t} \theta_{o,t} + r_o >= 1
         order.Constraints.append(primal.addConstr(sum(order.ShiftVars) + order.RejectVar >= 1,cname))
         
+        
+          
+                
+             
+        
     for product in Products.values():
         
         for day in range(tau_value):
@@ -145,7 +150,8 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
             product.SetupCons.append(primal.addConstr(prodvar <= product.AvgBatch*setupvar, stname))
             
             cname = 'Tgt_Prod_'+str(product.PN)+"_"+str(day)
-            primal.addConstr(targetvar <= product.StockLevel + prodvar, cname)
+            #primal.addConstr(targetvar <= product.StockLevel + prodvar, cname)
+            primal.addConstr(targetvar <= prodvar, cname)
             
             # Here we initialize production target level constraints for each product
             cname = 'Consvr'+str(product.PN)+"_"+str(day)
@@ -160,6 +166,30 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 constraint = primal.addConstr(product.TargetVars[-1]  == 0, cname)
                 product.TargetStockCons.append(constraint)
                 
+                
+    for rawmaterial in RawMaterials.values():
+        
+          for day in range(tau_value):
+              
+                levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,obj = 1,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
+                rawmaterial.TargetVars.append(levelvar)
+                
+             
+                # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t}, 
+                stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day)
+                rawmatcons = primal.addConstr(0 <= levelvar, stname)
+                rawmaterial.TargetStockCons.append(rawmatcons)
+            
+                for (product,multiplier) in rawmaterial.RequiringProducts:
+                      primal.chgCoeff(rawmatcons,product.ProductionVars[day],-multiplier)
+                      
+          for i in range(len(rawmaterial.StockLevels)):
+               rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i]
+                     
+                
+                
+                
+        
 
     for order in Orders.values():
         rend = min(order.Deadline+CustomerTolerance, tau_value-1)
@@ -178,7 +208,7 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
             
     primal.update()
     
-    #primal.write('LPFiles/LastversionWHAT.lp')
+    primal.write('LPFiles/ExtendedWHAT.lp')
 
     return [primal,tau_value,Orders,Products]
 ##############################################################################################    
@@ -196,7 +226,11 @@ def UpdateStockLevelCons(refday,theta,quantity,primal,product, timeGranularity):
         
 
     for myProd, Multiplier in product.Predecessors:
+      
         predquantity = Multiplier*quantity*(1+myProd.ScrapRate)
+        if myProd.PN == "6808-1500-5305":
+            print("Prod",product.PN,", pred: ",myProd.PN,", mult: ",predquantity,", day :",refday-CumulativeDays)
+            
         UpdateStockLevelCons(refday-CumulativeDays,theta,predquantity,primal,myProd,timeGranularity)
 
     return
@@ -226,7 +260,7 @@ def UpdateStockLevelCons(refday,theta,quantity,primal,product, timeGranularity):
 
 
 #############################################################################################################
-def SolveWhatModel(primal,H2M,W2D,timelimit,tau_value,Orders,Products,CustomerTolerance,WorkCenters,timeGranularity):
+def SolveWhatModel(primal,H2M,W2D,timelimit,tau_value,Orders,Products,RawMaterials,CustomerTolerance,WorkCenters,timeGranularity):
     "Solves the model."
     
     # write the ILP model in an lp file  
@@ -318,6 +352,7 @@ def SolveWhatModel(primal,H2M,W2D,timelimit,tau_value,Orders,Products,CustomerTo
                 else:
                     product.TargetLevels.append(product.ProductionVars[day].xn)
         PrintProductionTargets(Products,tau_value,OptSolved)
+        PrintRawMaterialTargets(RawMaterials,tau_value,OptSolved)
                   
     
     return acceptedorders
@@ -386,24 +421,62 @@ def PrintProductionTargets(Products,tau_value,optimal):
        
    for product in Products.values():
        total = 0
-       prodreqstr = product.PN+': '
+       trgtotal = 0
+       prodreqstr = "Prod, "+product.PN+': '
+       trgreqstr =  "Target, "+product.PN+': '
        product.array = []
        for day in range(tau_value): 
            
            if optimal: 
                productval = product.ProductionVars[day].x
                product.array.append(round(product.ProductionVars[day].x, 2))
+               targetval = product.TargetVars[day].x
+            
                # print(product.array.append)
                
            else:
                productval = product.ProductionVars[day].xn
                product.array.append(round(product.ProductionVars[day].xn, 2))
+               targetval = product.TargetVars[day].xn
                # print(product.array.append)
                
            prodreqstr+=','+str(round(productval,0))
+           trgreqstr+=','+str(round(targetval,0))
+           trgtotal +=targetval
            total+=productval
        if total > 0:
-           print('     >'+prodreqstr)            
+           print('     >'+prodreqstr)   
+       # if trgtotal > 0:
+       #     print('     >'+trgreqstr)
+                              
+
+def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
+    
+   print('   _____________________________________________________')
+   print('   >> WHAT Model results: Raw Material Targets..')
+       
+   for rawmaterial in RawMaterials.values():
+       total = 0
+       rawreqstr = rawmaterial.PN+': '
+
+       rawmaterial.TargetLevels.clear()
+       for day in range(tau_value): 
+           rawval = 0
+           if optimal: 
+               rawval = rawmaterial.TargetVars[day].x
+               rawmaterial.TargetLevels.append(round(rawmaterial.TargetVars[day].x, 2))
+               # 
+               
+           else:
+               rawval = rawmaterial.TargetVars[day].xn
+               rawmaterial.TargetLevels.append(round(rawmaterial.TargetVars[day].xn, 2))
+             
+               
+           rawreqstr+=','+str(round(rawval,0))
+           total+=rawval
+       if total > 0:
+           print('     >'+rawreqstr)     
+           
                               
            # fig = plt.figure()
            # ax = fig.add_axes([0,0,1,1])

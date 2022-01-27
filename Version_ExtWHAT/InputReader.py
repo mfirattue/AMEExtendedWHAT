@@ -5,6 +5,7 @@ Created on Mon May 24 17:56:54 2021
 @author: VAIO
 """
 import pandas as pd
+import random
 
 from Objects.ProductionObjects import AMEWorkcenter,AMEMachine,AMEProduct, AMERawMaterial, AMEOperation,AMEOperationType, Equipment,Worker
 from Objects.PlanningObjects import AMEOrder
@@ -289,29 +290,42 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
             continue
          
         ProductDict[PN]=myprod
-
-
-    # new_data_Products = data_Products.set_index('PN')
-    new_data_Products = data_Products
-    # print("This is the new data set", new_data_Products.info())
-    
-    # print("This is de current data set", data_Products.info())
-    #set de PN als index, set column as index, nieuwe tabel maken.
-    # A second pass for setting predecessors and raw materials of products
-    
-    for index in range(0, len(new_data_Products)):
-        PN = new_data_Products.loc[index]['PN']
-        preds = ast.literal_eval(new_data_Products.loc[index]['Predecessors'])
-        # print(PN, preds, len(preds))
-        if len(preds) == 0:
-            if PN+'_rw' in RawMaterialDict:
-                ProductDict[PN].RawMaterials.append(RawMaterialDict[PN+'_rw'])
-                RawMaterialDict[PN+'_rw'].RequiringProducts.append((ProductDict[PN], 1))
+        
+    # A second pass for setting predecessors of products
+    for index in range(0, len(data_Products)):
+        PN = data_Products.loc[index]['PN']
+        preds = ast.literal_eval(data_Products.loc[index]['Predecessors'])
+      
+        for pred in preds:      
+            if pred[0] in ProductDict:
+                ProductDict[PN].Predecessors.append((ProductDict[pred[0]],int(pred[1])))                    
             else:
-                rawmaterial = AMERawMaterial(PN+'_rw',ProductDict[PN].WorkCenter, 1) #1 is multiplier
-                RawMaterialDict[PN+'_rw'] = rawmaterial
-                ProductDict[PN].RawMaterials.append(rawmaterial)
-                rawmaterial.RequiringProducts.append((ProductDict[PN], 1))
+                print('ERROR: Pred ',pred[0],' pf prod ',ProductDict[PN].PN,' does -not- exist in the list')
+                
+
+
+   
+    
+    for product in ProductDict.values():
+        RawPN = product.PN+"_rw"
+        if len(product.Predecessors) == 0:
+            if RawPN in RawMaterialDict:
+                product.RawMaterials.append(RawMaterialDict[RawPN])
+                RawMaterialDict[RawPN].RequiringProducts.append((product, 1))
+            else:
+                rawmaterial = AMERawMaterial(RawPN,product.WorkCenter, 1) #1 is multiplier
+                
+                # here we define only for three days the raw material level
+                day1level = product.StockLevel
+                rawmaterial.StockLevels.append(int(day1level))
+                day2level = (1+0.1*random.random())*day1level
+                rawmaterial.StockLevels.append(int(day2level))
+                day3level = (1+0.1*random.random())*day2level
+                rawmaterial.StockLevels.append(int(day3level))
+                
+                RawMaterialDict[RawPN] = rawmaterial
+                product.RawMaterials.append(rawmaterial)
+                rawmaterial.RequiringProducts.append((product, 1))
                 
                                 
                 
