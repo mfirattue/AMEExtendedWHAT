@@ -246,7 +246,7 @@ class AMERawMaterial:
         self.PN = myPN
         self.WorkCenter = myWokrcnt
         self.StockLevels = [] #fixed values
-        self.RequiringProducts = [] #Tuples (Pn, multiplier)
+        self.RequiringProducts = [] #Tuples (PN, multiplier)
         
         # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
     
@@ -254,4 +254,5 @@ class AMERawMaterial:
         self.TargetVars = [] #for every time step, level decision variable
         self.TargetStockCons = [] #
         self.TargetLevels = []      #advice levels
+        self.Slack = [] #slackvalues
         

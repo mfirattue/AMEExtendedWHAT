@@ -32,7 +32,7 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
     Orders2 = dict()
     Orders3 = dict()
     
-    RejectedOrderList = [] # droped orders based on unrealistic deadline
+    RejectedOrderList = [] # dropped orders based on unrealistic deadline
     
     for OrderID, myOrder in AllOrders.items():
         myOrder.FindLatestStartTime(tau_value, timeGranularity)
@@ -176,19 +176,17 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 
              
                 # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t}, 
-                stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day)
+                stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day) #name of the constraint
                 rawmatcons = primal.addConstr(0 <= levelvar, stname)
                 rawmaterial.TargetStockCons.append(rawmatcons)
             
                 for (product,multiplier) in rawmaterial.RequiringProducts:
                       primal.chgCoeff(rawmatcons,product.ProductionVars[day],-multiplier)
                       
+                      
           for i in range(len(rawmaterial.StockLevels)):
-               rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i]
-                     
-                
-                
-                
+                rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
+                    
         
 
     for order in Orders.values():
@@ -342,6 +340,7 @@ def SolveWhatModel(primal,H2M,W2D,timelimit,tau_value,Orders,Products,RawMateria
                         
                 countAccepted += 1
         print('   >> Accepted Orders: ',countAccepted,', Rejected Orders: ', len(Orders)-countAccepted)
+        # print('Rejected Orders')
             
         PrintOrderAcceptance(Orders,CustomerTolerance,tau_value) 
             
@@ -414,7 +413,7 @@ def PrintOrderAcceptance(Orders,CustomerTolerance,tau_value):
             print('     > Rejected: Order',order.OrderID,'PN:',order.Product.PN,', ls:',order.getLatestStartDay(),', d:',order.Deadline,',Quantity:',order.Quantity)
     return 
   
-def PrintProductionTargets(Products,tau_value,optimal):
+def PrintProductionTargets(Products, tau_value,optimal):
     
    print('   _____________________________________________________')
    print('   >> WHAT Model results: Production Targets..')
@@ -448,7 +447,8 @@ def PrintProductionTargets(Products,tau_value,optimal):
            print('     >'+prodreqstr)   
        # if trgtotal > 0:
        #     print('     >'+trgreqstr)
-                              
+       
+
 
 def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     
@@ -475,7 +475,26 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
            rawreqstr+=','+str(round(rawval,0))
            total+=rawval
        if total > 0:
-           print('     >'+rawreqstr)     
+           print('     >'+rawreqstr)
+           
+       for day in range(5):
+           # print('Stocklevels ', rawmaterial.StockLevels[day]) #okay
+           print('Targetvariable ', rawmaterial.TargetVars[day])
+           # rawmaterial.Slack = sum(int(rawmaterial.StockLevels[day])) - sum(int(rawmaterial.TargetVars[day]))
+           
+           
+           # slackvalue = []
+           # slackvalue = sum(rawmaterial.StockLevels[day]) - sum(rawmaterial.TargetVars[day])
+           print(rawmaterial.Slack)
+           # slack = 'slack_'+str(rawmaterial.PN)+'_'+str(day)
+           # slackvalue = rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day]
+           # slack.append(slackvalue)
+           # print(slack)
+                # print(rawmaterial.StockLevels)
+                # print(rawmaterial.TargetVars)
+             
+                          
+                                      
            
                               
            # fig = plt.figure()
