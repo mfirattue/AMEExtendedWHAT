@@ -9,7 +9,7 @@ import pandas as pd
 import time
 import math
 from Objects.ProcessObjects import QualityCheck
-
+import random
 
 
 
@@ -253,6 +253,6 @@ class AMERawMaterial:
         self.QualitypastRate = QualitypastRate
         self.TargetVars = [] #for every time step, level decision variable
         self.TargetStockCons = [] #
-        self.TargetLevels = []      #advice levels
+        self.TargetLevels = [] #advice levels
         self.Slack = [] #slackvalues
-        
+        self.LeadTime = random.randint(1,6)

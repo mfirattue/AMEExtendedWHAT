@@ -311,11 +311,11 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
         if len(product.Predecessors) == 0:
             if RawPN in RawMaterialDict:
                 product.RawMaterials.append(RawMaterialDict[RawPN])
-                RawMaterialDict[RawPN].RequiringProducts.append((product, 1)) #random is multiplier
+                RawMaterialDict[RawPN].RequiringProducts.append((product, 1)) #random is multiplier, random.randint(1,10)
             else:
-                rawmaterial = AMERawMaterial(RawPN,product.WorkCenter, 1) #random is multiplier # random.randint(1,10
+                rawmaterial = AMERawMaterial(RawPN,product.WorkCenter, 1) #random is multiplier # random.randint(1,10)
                 
-                # here we define only for three days the raw material level
+                # here we define only for three days the raw material levels
                 day1level = product.StockLevel
                 rawmaterial.StockLevels.append(int(day1level))
                 day2level = (1+0.1*random.random())*day1level
@@ -332,6 +332,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 
     print('   >> No. Products: ',len(ProductDict))
     print('   >> No. Raw Materials : ',len(RawMaterialDict))
+    # print(RawMaterialDict)
           
     print('   >> Products with stock information', counter_wel)
     return ProductDict, RawMaterialDict

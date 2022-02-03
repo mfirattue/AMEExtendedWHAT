@@ -169,13 +169,14 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 
     for rawmaterial in RawMaterials.values():
         
+          # for day in range(rawmaterial.LeadTime):
           for day in range(tau_value):
               
                 levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,obj = 1,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
                 rawmaterial.TargetVars.append(levelvar)
                 
              
-                # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t}, 
+                # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t},
                 stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day) #name of the constraint
                 rawmatcons = primal.addConstr(0 <= levelvar, stname)
                 rawmaterial.TargetStockCons.append(rawmatcons)
@@ -474,18 +475,19 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
                
            rawreqstr+=','+str(round(rawval,0))
            total+=rawval
-       if total > 0:
-           print('     >'+rawreqstr)
-           
-       for day in range(5):
-           # print('Stocklevels ', rawmaterial.StockLevels[day]) #okay
-           print('Targetvariable ', rawmaterial.TargetVars[day])
-           # rawmaterial.Slack = sum(int(rawmaterial.StockLevels[day])) - sum(int(rawmaterial.TargetVars[day]))
+       # if total > 0:
+           # print('     >'+rawreqstr)
+        
+       for day in range(3):
+            # print('Stocklevels ', rawmaterial.StockLevels[day])
+            # print('Targetvariable ', rawmaterial.TargetVars[day].x)
+            rawmaterial.Slack = rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x
+            print(rawmaterial.PN, rawmaterial.Slack, rawmaterial.StockLevels[day])
            
            
            # slackvalue = []
            # slackvalue = sum(rawmaterial.StockLevels[day]) - sum(rawmaterial.TargetVars[day])
-           print(rawmaterial.Slack)
+           # print(rawmaterial.Slack)
            # slack = 'slack_'+str(rawmaterial.PN)+'_'+str(day)
            # slackvalue = rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day]
            # slack.append(slackvalue)
