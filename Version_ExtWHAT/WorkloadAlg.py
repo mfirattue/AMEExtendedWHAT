@@ -482,22 +482,23 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
             # print('Stocklevels ', rawmaterial.StockLevels[day])
             # print('Targetvariable ', rawmaterial.TargetVars[day].x)
             rawmaterial.Slack = rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x
-            print(rawmaterial.PN, rawmaterial.Slack, rawmaterial.StockLevels[day])
-           
-           
-           # slackvalue = []
-           # slackvalue = sum(rawmaterial.StockLevels[day]) - sum(rawmaterial.TargetVars[day])
-           # print(rawmaterial.Slack)
-           # slack = 'slack_'+str(rawmaterial.PN)+'_'+str(day)
-           # slackvalue = rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day]
-           # slack.append(slackvalue)
-           # print(slack)
-                # print(rawmaterial.StockLevels)
-                # print(rawmaterial.TargetVars)
-             
-                          
-                                      
-           
+            # print(rawmaterial.PN, rawmaterial.Slack, rawmaterial.StockLevels[day])
+            print(rawmaterial.PN, 'Slack at day ', day,': ', rawmaterial.Slack)
+            if rawmaterial.Slack == 0:
+                x = [1, 2, 3, 4, 5]
+                y =  rawmaterial.StockLevels
+                y2 = rawmaterial.Slack
+                fig, ax = plt.subplots()
+                ax.plot(x, y)
+                ax.plot(x, y2) 
+                title = "Iventory levels" + rawmaterial.PN
+                ax.set_title(title)
+                ax.set_ylabel("# raw materials")
+                ax.set_xlabel("Day")
+                plt.gca().legend(('Stock levels','Slack levels'))
+                plt.show()
+                
+               
                               
            # fig = plt.figure()
            # ax = fig.add_axes([0,0,1,1])
