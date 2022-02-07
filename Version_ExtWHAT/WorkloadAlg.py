@@ -478,40 +478,39 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
        # if total > 0:
            # print('     >'+rawreqstr)
         
-       for day in range(3):
+       for day in range(5):
             # print('Stocklevels ', rawmaterial.StockLevels[day])
             # print('Targetvariable ', rawmaterial.TargetVars[day].x)
-            rawmaterial.Slack = rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x
-            # print(rawmaterial.PN, rawmaterial.Slack, rawmaterial.StockLevels[day])
-            print(rawmaterial.PN, 'Slack at day ', day,': ', rawmaterial.Slack)
-            if rawmaterial.Slack == 0:
-                x = [1, 2, 3, 4, 5]
-                y =  rawmaterial.StockLevels
-                y2 = rawmaterial.Slack
-                fig, ax = plt.subplots()
-                ax.plot(x, y)
-                ax.plot(x, y2) 
-                title = "Iventory levels" + rawmaterial.PN
-                ax.set_title(title)
-                ax.set_ylabel("# raw materials")
-                ax.set_xlabel("Day")
-                plt.gca().legend(('Stock levels','Slack levels'))
-                plt.show()
-                
+            if day <= 2:
+                rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
+            if day >= 3:
+                rawmaterial.Slack.append(rawmaterial.StockLevels[2] - rawmaterial.TargetVars[day].x)
+            #     print('day 4', rawmaterial.TargetVars[3].x, 'day 5', rawmaterial.TargetVars[4].x)
+            # print(rawmaterial.PN, 'Slack at day ', day,': ', rawmaterial.Slack)
+            # print('-->', rawmaterial.Slack)
+       
+        
+       if min(rawmaterial.Slack) < 0:
+            print(rawmaterial.PN, min(rawmaterial.Slack))
+                    
+           
+           
+           
+       # x = np.array([1, 2, 3, 4, 5])
+       # y = [rawmaterial.StockLevels[0], rawmaterial.StockLevels[1], rawmaterial.StockLevels[2], rawmaterial.StockLevels[2], rawmaterial.StockLevels[2]]
+       # y2 = rawmaterial.Slack
+       # fig, ax = plt.subplots()
+       # ax.plot(x, y)
+       # ax.plot(x, y2) 
+       # title = "Inventory levels" + rawmaterial.PN
+       # ax.set_title(title)
+       # ax.set_ylabel("# raw materials")
+       # ax.set_xlabel("Day")
+       # plt.gca().legend(('Stock levels','Slack levels'))
+       # plt.show()
+            
                
-                              
-           # fig = plt.figure()
-           # ax = fig.add_axes([0,0,1,1])
-           # xaxis = [1, 2, 3, 4, 5]
-           # ax.bar(xaxis, product.array)
-           # title = "Production target for PN"+ product.PN
-           # ax.set_title(title)
-           # ax.set_ylabel("Number of PN's")
-           # ax.set_xlabel("Day")
-           # plt.show()
-           
                   
-           
 ###################################################################################################          
 
 

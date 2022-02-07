@@ -318,9 +318,9 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 # here we define only for three days the raw material levels
                 day1level = product.StockLevel
                 rawmaterial.StockLevels.append(int(day1level))
-                day2level = (1+0.01*random.random())*day1level
+                day2level = (1+0.1*random.random())*day1level
                 rawmaterial.StockLevels.append(int(day2level))
-                day3level = (1+0.01*random.random())*day2level
+                day3level = (1+0.1*random.random())*day2level
                 rawmaterial.StockLevels.append(int(day3level))
                 
                 RawMaterialDict[RawPN] = rawmaterial
