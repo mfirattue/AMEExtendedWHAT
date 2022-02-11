@@ -184,9 +184,14 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 for (product,multiplier) in rawmaterial.RequiringProducts:
                       primal.chgCoeff(rawmatcons,product.ProductionVars[day],-multiplier)
                       
+         
                       
           for i in range(len(rawmaterial.StockLevels)):
                 rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
+          
+          for i in range(tau_value):
+              rawmaterial.TargetVars[i].ub = 28
+                
                     
         
 
@@ -478,22 +483,33 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
        # if total > 0:
            # print('     >'+rawreqstr)
         
-       for day in range(5):
-            # print('Stocklevels ', rawmaterial.StockLevels[day])
-            # print('Targetvariable ', rawmaterial.TargetVars[day].x)
-            if day <= 2:
-                rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
-            if day >= 3:
-                rawmaterial.Slack.append(rawmaterial.StockLevels[2] - rawmaterial.TargetVars[day].x)
-            #     print('day 4', rawmaterial.TargetVars[3].x, 'day 5', rawmaterial.TargetVars[4].x)
-            # print(rawmaterial.PN, 'Slack at day ', day,': ', rawmaterial.Slack)
-            # print('-->', rawmaterial.Slack)
+       # for day in range(5): #Slack materials only bounded (by 0) in the bounded period, until we have inventory so day 1,2,3
+       #      # print('Stocklevels ', rawmaterial.StockLevels[day])
+       #      # print('Targetvariable ', rawmaterial.TargetVars[day].x)
+       #      if day <= 2:
+       #          rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
+       #      if day >= 3:
+       #          rawmaterial.Slack.append(rawmaterial.StockLevels[2] - rawmaterial.TargetVars[day].x)
+       #      #     print('day 4', rawmaterial.TargetVars[3].x, 'day 5', rawmaterial.TargetVars[4].x)
+       #      # print(rawmaterial.PN, 'Slack at day ', day,': ', rawmaterial.Slack)
+       #      # print('-->', rawmaterial.Slack)
        
         
-       if min(rawmaterial.Slack) < 0:
-            print(rawmaterial.PN, min(rawmaterial.Slack))
-                    
-           
+       # if min(rawmaterial.Slack) < 0:
+       #      print(rawmaterial.PN, min(rawmaterial.Slack))
+       # for day in range(3): #or range(3) 
+       #    rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
+          
+         
+       if rawmaterial.TargetVars[day].x > 0:
+              print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))       
+    
+       # print(rawmaterial.PN, 'slack list', rawmaterial.Slack)
+       # if rawmaterial.Slack[0] == 0:
+       #     print(rawmaterial.PN, 'critical rawmaterial', rawmaterial.Slack)
+              
+    
+
            
            
        # x = np.array([1, 2, 3, 4, 5])

@@ -7,7 +7,7 @@ Created on Mon May 24 17:56:54 2021
 import pandas as pd
 import random
 
-from Objects.ProductionObjects import AMEWorkcenter,AMEMachine,AMEProduct, AMERawMaterial, AMEOperation,AMEOperationType, Equipment,Worker
+from Objects.ProductionObjects import AMEWorkcenter,AMEMachine,AMEProduct, AMERawMaterial, AMEOperation, AMEOperationType, Equipment,Worker
 from Objects.PlanningObjects import AMEOrder
 from PreProcessing import UpdateMachineSubsets,PrintMachineGroup,UpdateOprMachines,FindIncludingMachineSubSets
 
@@ -195,6 +195,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
     data_StockLevels.set_index('PN')
     ProductDict = {}
     RawMaterialDict = {}
+    # AlternativeDict = {}
     
     
     
@@ -313,7 +314,7 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 product.RawMaterials.append(RawMaterialDict[RawPN])
                 RawMaterialDict[RawPN].RequiringProducts.append((product, 1)) #random is multiplier, random.randint(1,10)
             else:
-                rawmaterial = AMERawMaterial(RawPN,product.WorkCenter, 1) #random is multiplier # random.randint(1,10)
+                rawmaterial = AMERawMaterial(RawPN, product.WorkCenter, 1) #random is multiplier # random.randint(1,10)
                 
                 # here we define only for three days the raw material levels
                 day1level = product.StockLevel
@@ -327,9 +328,13 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 product.RawMaterials.append(rawmaterial)
                 rawmaterial.RequiringProducts.append((product, 1))
         
-    for RawPN in RawMaterialDict:
-        AlternativeRawPN = RawPN+"_alt"
-        #relatie naar orders, afhankelijk                           
+    # for RawPN in RawMaterialDict:
+    #     AlternativeRawPN = RawPN+"_alt"
+    #     if AlternativeRawPN in AlternativeDict:
+    #         product.Alternative.append(AlternativeDict[AlternativeRawPN])
+            
+        
+        #relatie naar successor + design, afhankelijk                           
                                 
                 
     print('   >> No. Products: ',len(ProductDict))
