@@ -327,7 +327,9 @@ def InitializeAMEProducts(WorkCenterDict,ResourceFile, StockFile, Date):
                 product.RawMaterials.append(rawmaterial)
                 rawmaterial.RequiringProducts.append((product, 1))
         
-                                
+    for RawPN in RawMaterialDict:
+        AlternativeRawPN = RawPN+"_alt"
+        #relatie naar orders, afhankelijk                           
                                 
                 
     print('   >> No. Products: ',len(ProductDict))

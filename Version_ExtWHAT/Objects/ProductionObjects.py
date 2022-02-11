@@ -256,3 +256,16 @@ class AMERawMaterial:
         self.TargetLevels = [] #advice levels
         self.Slack = [] #slackvalues
         self.LeadTime = random.randint(1,6)
+        
+        
+class AMEAlternative:
+    # Initializer / Instance Attributes
+    def __init__(self, myPN, myWokrcnt):
+        self.PN = myPN
+        self.WorkCenter = myWokrcnt
+        self.StockLevels = [] #fixed values
+        self.RequiringProducts = [] #Tuples (PN, multiplier)
+        self.Order
+        
+        # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
+        self.LeadTime = random.randint(1,6)
