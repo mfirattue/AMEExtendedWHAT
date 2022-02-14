@@ -190,7 +190,7 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
           
           for i in range(tau_value):
-              rawmaterial.TargetVars[i].ub = 28
+                rawmaterial.TargetVars[i].ub = 208
                 
                     
         
@@ -460,7 +460,9 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     
    print('   _____________________________________________________')
    print('   >> WHAT Model results: Raw Material Targets..')
-       
+   
+   top10 = {}
+     
    for rawmaterial in RawMaterials.values():
        total = 0
        rawreqstr = rawmaterial.PN+': '
@@ -481,7 +483,11 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
            rawreqstr+=','+str(round(rawval,0))
            total+=rawval
        # if total > 0:
-           # print('     >'+rawreqstr)
+       #     print('     >'+rawreqstr)
+       
+       # for day in range(tau_value):
+           # print("Targetlevels", rawmaterial.TargetLevels[day])
+           # print("Targetvariable", rawmaterial.TargetVars[day].x)
         
        # for day in range(5): #Slack materials only bounded (by 0) in the bounded period, until we have inventory so day 1,2,3
        #      # print('Stocklevels ', rawmaterial.StockLevels[day])
@@ -499,10 +505,34 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
        #      print(rawmaterial.PN, min(rawmaterial.Slack))
        # for day in range(3): #or range(3) 
        #    rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
-          
-         
-       if rawmaterial.TargetVars[day].x > 0:
-              print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))       
+       
+       
+             
+       if rawmaterial.TargetVars[day].x > 144:
+            print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))    
+            top10[rawmaterial.PN] = round(rawmaterial.TargetVars[4].x,0)
+           # print(top10)
+   
+              
+   fig = plt.figure()
+   ax = fig.add_axes([0,0,1,1])
+   bound = top10.keys()
+   rejection = top10.values()
+   ax.bar(bound, rejection)
+   ax.set_ylabel('Number of raw materials')
+   ax.set_title('Required number of raw materials at day 5')
+   plt.xticks(rotation=90)
+   plt.show()
+        
+   # fig = plt.figure()
+   # ax = fig.add_axes([0,0,1,1])
+   # bound = ["10%", '25%', '50%', '75%', '100%']
+   # rejection = [32,21,14,6,6]
+   # ax.bar(bound, rejection)
+   # ax.set_ylabel('Number of rejected orders')
+   # ax.set_xlabel('Maximum percentage of upper bound')
+   # ax.set_title('Number of rejected orders per upper bound')
+   # plt.show()
     
        # print(rawmaterial.PN, 'slack list', rawmaterial.Slack)
        # if rawmaterial.Slack[0] == 0:
