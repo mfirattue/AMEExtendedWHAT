@@ -387,7 +387,7 @@ def WriteMachineCapacityUse(WorkCenters,tau_value,timeGranularity,optimal):
                      row = str(workcnt.Name)+','+str(subsetstr)+','+str(day+1)+','+str(round(totaluse,2))+','+str(round(totalcap,2))     
                      row += "\n"
                      output.write(row)
-                     print('     > Day',(day+1),': ',round(totaluse,2),'<= ',round(totalcap,2))
+                     # print('     > Day',(day+1),': ',round(totaluse,2),'<= ',round(totalcap,2))
                      # print(str(workcnt.Name), str(subsetstr), workcnt.subsetstr_use, workcnt.subsetstr_cap)
                
                  subsetid+=1 

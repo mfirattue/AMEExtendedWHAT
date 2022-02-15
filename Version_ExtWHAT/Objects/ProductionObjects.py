@@ -240,23 +240,23 @@ class AMEProduct:
         
         self.TargetLevels = [] #advice levels
     
-# class AMERawMaterial:
-#     # Initializer / Instance Attributes
-#     def __init__(self, myPN, myWokrcnt, QualitypastRate):
-#         self.PN = myPN
-#         self.WorkCenter = myWokrcnt
-#         self.StockLevels = [] #fixed values
-#         self.RequiringProducts = [] #Tuples (PN, multiplier)
+class AMERawMaterial:
+    # Initializer / Instance Attributes
+    def __init__(self, myPN, myWokrcnt, QualitypastRate):
+        self.PN = myPN
+        self.WorkCenter = myWokrcnt
+        self.StockLevels = [] #fixed values
+        self.RequiringProducts = [] #Tuples (PN, multiplier)
         
-#         # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
+        # print('PN: ', self.PN, 'StockLevel', self.StockLevel)
     
-#         self.QualitypastRate = QualitypastRate
-#         self.TargetVars = [] #for every time step, level decision variable
-#         self.TargetStockCons = [] #
-#         self.TargetLevels = [] #advice levels
-#         self.Slack = [] #slackvalues
-#         self.LeadTime = random.randint(1,6)
-#         # self.Alternative = myAlternative
+        self.QualitypastRate = QualitypastRate
+        self.TargetVars = [] #for every time step, level decision variable
+        self.TargetStockCons = [] #
+        self.TargetLevels = [] #advice levels
+        self.Slack = [] #slackvalues
+        self.LeadTime = random.randint(1,6)
+        # self.Alternative = myAlternative
         
         
 # class AMEAlternative:
