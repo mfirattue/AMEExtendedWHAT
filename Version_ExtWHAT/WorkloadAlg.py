@@ -69,7 +69,7 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
 
     print('   >> Orders with consideration interval later than tau:',independentorders)
     print('   >> Orders with negative latest start and deadline later than tau:',len(RejectedOrderList))
-    #print(RejectedOrderList)
+    # print(RejectedOrderList)
  
 
     rejectcoeff = 10**6
@@ -167,30 +167,30 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 product.TargetStockCons.append(constraint)
                 
                 
-    for rawmaterial in RawMaterials.values():
+    # for rawmaterial in RawMaterials.values():
         
-          # for day in range(rawmaterial.LeadTime):
-          for day in range(tau_value):
+    #       # for day in range(rawmaterial.LeadTime):
+    #       for day in range(tau_value):
               
-                levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,obj = 1,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
-                rawmaterial.TargetVars.append(levelvar)
+    #             levelvar = primal.addVar(vtype=grb.GRB.CONTINUOUS,obj = 1,lb = 0,name = 'gamma_'+str(rawmaterial.PN)+'_'+str(day))  
+    #             rawmaterial.TargetVars.append(levelvar)
                 
              
-                # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t},
-                stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day) #name of the constraint
-                rawmatcons = primal.addConstr(0 <= levelvar, stname)
-                rawmaterial.TargetStockCons.append(rawmatcons)
+    #             # gamma_{rw,t} >= \sum_{t}alpha__{i,rw}*K_{i,t},
+    #             stname = 'Raw_'+str(rawmaterial.PN)+"_"+str(day) #name of the constraint
+    #             rawmatcons = primal.addConstr(0 <= levelvar, stname)
+    #             rawmaterial.TargetStockCons.append(rawmatcons)
             
-                for (product,multiplier) in rawmaterial.RequiringProducts:
-                      primal.chgCoeff(rawmatcons,product.ProductionVars[day],-multiplier)
+    #             for (product,multiplier) in rawmaterial.RequiringProducts:
+    #                   primal.chgCoeff(rawmatcons,product.ProductionVars[day],-multiplier)
                       
          
                       
-          for i in range(len(rawmaterial.StockLevels)):
-                rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
+    #       for i in range(len(rawmaterial.StockLevels)):
+    #             rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
           
-          for i in range(tau_value):
-                rawmaterial.TargetVars[i].ub = 208
+    #       for i in range(tau_value):
+    #             rawmaterial.TargetVars[i].ub = 208
                 
                     
         
@@ -357,7 +357,7 @@ def SolveWhatModel(primal,H2M,W2D,timelimit,tau_value,Orders,Products,RawMateria
                 else:
                     product.TargetLevels.append(product.ProductionVars[day].xn)
         PrintProductionTargets(Products,tau_value,OptSolved)
-        PrintRawMaterialTargets(RawMaterials,tau_value,OptSolved)
+        # PrintRawMaterialTargets(RawMaterials,tau_value,OptSolved)
                   
     
     return acceptedorders
@@ -456,32 +456,32 @@ def PrintProductionTargets(Products, tau_value,optimal):
        
 
 
-def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
+# def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     
-   print('   _____________________________________________________')
-   print('   >> WHAT Model results: Raw Material Targets..')
+#    print('   _____________________________________________________')
+#    print('   >> WHAT Model results: Raw Material Targets..')
    
-   top10 = {}
+#    top10 = {}
      
-   for rawmaterial in RawMaterials.values():
-       total = 0
-       rawreqstr = rawmaterial.PN+': '
+#    for rawmaterial in RawMaterials.values():
+#        total = 0
+#        rawreqstr = rawmaterial.PN+': '
 
-       rawmaterial.TargetLevels.clear()
-       for day in range(tau_value): 
-           rawval = 0
-           if optimal: 
-               rawval = rawmaterial.TargetVars[day].x
-               rawmaterial.TargetLevels.append(round(rawmaterial.TargetVars[day].x, 2))
-               # 
+#        rawmaterial.TargetLevels.clear()
+#        for day in range(tau_value): 
+#            rawval = 0
+#            if optimal: 
+#                rawval = rawmaterial.TargetVars[day].x
+#                rawmaterial.TargetLevels.append(round(rawmaterial.TargetVars[day].x, 2))
+#                # 
                
-           else:
-               rawval = rawmaterial.TargetVars[day].xn
-               rawmaterial.TargetLevels.append(round(rawmaterial.TargetVars[day].xn, 2))
+#            else:
+#                rawval = rawmaterial.TargetVars[day].xn
+#                rawmaterial.TargetLevels.append(round(rawmaterial.TargetVars[day].xn, 2))
              
                
-           rawreqstr+=','+str(round(rawval,0))
-           total+=rawval
+#            rawreqstr+=','+str(round(rawval,0))
+#            total+=rawval
        # if total > 0:
        #     print('     >'+rawreqstr)
        
@@ -508,21 +508,21 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
        
        
              
-       if rawmaterial.TargetVars[day].x > 144:
-            print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))    
-            top10[rawmaterial.PN] = round(rawmaterial.TargetVars[4].x,0)
-           # print(top10)
+       # if rawmaterial.TargetVars[day].x > 144:
+       #      print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))    
+       #      top10[rawmaterial.PN] = round(rawmaterial.TargetVars[4].x,0)
+       #     # print(top10)
    
               
-   fig = plt.figure()
-   ax = fig.add_axes([0,0,1,1])
-   bound = top10.keys()
-   rejection = top10.values()
-   ax.bar(bound, rejection)
-   ax.set_ylabel('Number of raw materials')
-   ax.set_title('Required number of raw materials at day 5')
-   plt.xticks(rotation=90)
-   plt.show()
+   # fig = plt.figure()
+   # ax = fig.add_axes([0,0,1,1])
+   # bound = top10.keys()
+   # rejection = top10.values()
+   # ax.bar(bound, rejection)
+   # ax.set_ylabel('Number of raw materials')
+   # ax.set_title('Required number of raw materials at day 5')
+   # plt.xticks(rotation=90)
+   # plt.show()
         
    # fig = plt.figure()
    # ax = fig.add_axes([0,0,1,1])
