@@ -526,7 +526,7 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     plt.legend()
     plt.xlabel("Time horizon")
     plt.ylabel("No. of orders")
-    plt.title("No. of accepted and rejected orders for different time horizon with M = 10^6 without considering raw material availability")
+    plt.title("No. of accepted and rejected orders, without considering raw material availability") #M = 10^6 without considering raw material availability
     plt.show()
     
     Class = [5, 6, 7, 8, 9, 10]
@@ -538,7 +538,7 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     plt.legend()
     plt.xlabel("Time horizon")
     plt.ylabel("No. of orders")
-    plt.title("Order acceptance for time instance [5-10] & M = 10^6 with considering raw material availability")
+    plt.title("No. of accepted and rejected orders, with considering raw material availability") # M=10^6 with considering raw material availability
     plt.show()
     
     Class = [5, 6, 7, 8, 9, 10]
