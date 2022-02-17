@@ -42,6 +42,26 @@ class AMEOrder:
         self.StartJobs = []
         self.Jobs = []
         
+        self.PriorityDict = {'6880': 1000,
+         '6557': 1000,
+         '6023': 1000,
+         '6808': 1000,
+         '6410': 1000,
+         '6298': 1000,
+         '6318': 1000,
+         '6782': 1000,
+         '6047': 1000,
+         '6799': 1000,
+         '6649': 1000,
+         '6761': 1000,
+         '6736': 1000}
+        
+        if myProd.PN[0:4] in self.PriorityDict:
+            self.Priority = 10**12
+        else:
+            self.Priority = 10
+            
+        
         
         
         # self.MasterLPVars = [] # <OrderSchedule>:var
