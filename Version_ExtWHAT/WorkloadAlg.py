@@ -519,15 +519,15 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     # print(top10)
     # print(len(top10))
               
-    fig = plt.figure()
-    ax = fig.add_axes([0,0,1,1])
-    bound = top10.keys()
-    rejection = top10.values()
-    ax.bar(bound, rejection)
-    ax.set_ylabel('Number of raw materials')
-    ax.set_title('Required number of raw materials at day 5')
-    plt.xticks(rotation=90)
-    plt.show()
+    # fig = plt.figure()
+    # ax = fig.add_axes([0,0,1,1])
+    # bound = top10.keys()
+    # rejection = top10.values()
+    # ax.bar(bound, rejection)
+    # ax.set_ylabel('Number of raw materials')
+    # ax.set_title('Required number of raw materials at day 5')
+    # plt.xticks(rotation=90)
+    # plt.show()
     
     # Class = [5, 6, 7, 8, 9, 10]
     # Accepted = [47, 63, 77, 82, 96, 102]
@@ -553,39 +553,39 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     # plt.title("No. of accepted and rejected orders, with considering raw material availability") # M=10^6 with considering raw material availability
     # plt.show()
     
-    # Class = [5, 6, 7, 8, 9, 10]
-    # Accepted = [13, 19, 17, 18, 25, 23]
-    # Rejected = [34, 45, 62, 69, 78, 90]
-    # w = 0.8
-    # plt.bar(Class, Accepted, w, label="Accepted order")
-    # plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
-    # plt.legend()
-    # plt.xlabel("Time horizon")
-    # plt.ylabel("No. of orders")
-    # plt.title("No. of accepted and rejected orders for T = [5-10] and M = 10^2 without considering raw material availability")
-    # plt.show()
+    Class = [5, 6, 7, 8, 9, 10]
+    Accepted = [13, 19, 17, 18, 25, 23]
+    Rejected = [34, 45, 62, 69, 78, 90]
+    w = 0.8
+    plt.bar(Class, Accepted, w, label="Accepted order")
+    plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
+    plt.legend()
+    plt.xlabel("Time horizon")
+    plt.ylabel("No. of orders")
+    plt.title("No. of accepted and rejected orders, without considering raw material availability") #10^2
+    plt.show()
     
-    # Class = [5, 6, 7, 8, 9, 10]
-    # Accepted = [8, 16, 14, 15, 21, 17]
-    # Rejected = [39, 48, 65, 72, 82, 96]
-    # w = 0.8
-    # plt.bar(Class, Accepted, w, label="Accepted order")
-    # plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
-    # plt.xlabel("Time horizon")
-    # plt.ylabel("No. of orders")
-    # plt.title("No. of accepted and rejected orders for different time horizon with M = 10^2 with considering raw material availability")
-    # plt.legend()
-    # plt.show()
+    Class = [5, 6, 7, 8, 9, 10]
+    Accepted = [8, 16, 14, 15, 21, 17]
+    Rejected = [39, 48, 65, 72, 82, 96]
+    w = 0.8
+    plt.bar(Class, Accepted, w, label="Accepted order")
+    plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
+    plt.xlabel("Time horizon")
+    plt.ylabel("No. of orders")
+    plt.title("No. of accepted and rejected orders, with considering raw material availability") #10^2
+    plt.legend()
+    plt.show()
     
-    # fig = plt.figure()
-    # ax = fig.add_axes([0,0,1,1])
-    # bound = ["10%", '25%', '50%', '75%', '100%']
-    # rejection = [32,21,14,6,6]
-    # ax.bar(bound, rejection)
-    # ax.set_ylabel('Number of rejected orders')
-    # ax.set_xlabel('Maximum percentage of upper bound')
-    # ax.set_title('Number of rejected orders per upper bound')
-    # plt.show()
+    fig = plt.figure()
+    ax = fig.add_axes([0,0,1,1])
+    bound = ["10%", '25%', '50%', '75%', '100%']
+    rejection = [32,21,14,6,6]
+    ax.bar(bound, rejection)
+    ax.set_ylabel('Number of rejected orders')
+    ax.set_xlabel('Maximum percentage of upper bound')
+    ax.set_title('Number of rejected orders per upper bound')
+    plt.show()
     
                
            
