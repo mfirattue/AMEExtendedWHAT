@@ -219,7 +219,7 @@ class AMEProduct:
         self.WorkCenter = myWokrcnt
         self.Predecessors = [] # list of tuples (product,multiplier) met lists
         self.Operations = []
-        self.RawMaterials = [] # list of tuples (rawmaterial (PN), multiplier), 1 of 0 (boolean)
+        self.RawMaterials = [] # list of raw materials
         self.ProductGroup = myGroup
         self.ProcessRoute = myProcessRoute
         self.AvgBatch = avgbatch
