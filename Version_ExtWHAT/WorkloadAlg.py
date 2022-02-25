@@ -168,16 +168,21 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                 product.TargetStockCons.append(constraint)
                 
     
-        RawMaterials10 = {'6782-1401-4201_rw':654,
-            '6808-1400-0302_rw':324,
-            '6808-1500-5401_rw':251,
-            '6782-1401-0002_rw':276,
-            '6808-1500-5305_rw':263,
-            '6808-1800-0101_rw':259,
-            '6661-1100-2804_rw':243,
-            '6298-1400-7005_rw':176,
-            '6142-1100-2202_rw':161,
-            '6298-1100-0611_rw':156}        
+        RawMaterials15 = {'6782-1401-4201_rw': 652,
+        '6808-1400-0302_rw': 322,
+        '6808-1500-5401_rw': 279,
+        '6782-1401-0002_rw': 275,
+        '6808-1500-5305_rw': 262,
+        '6808-1800-0101_rw': 258,
+        '6661-1100-2804_rw': 242,
+        '6761-1200-5901_rw': 191,
+        '6649-1600-2300_rw': 183,
+        '6298-1400-7005_rw': 175,
+        '6142-1100-2202_rw': 159,
+        '6298-1100-0611_rw': 155,
+        '6649-1600-2200_rw': 152,
+        '6318-1800-4205_rw': 146,
+        '6966-1700-1602_rw': 134}        
     for rawmaterial in RawMaterials.values():
         
           # for day in range(rawmaterial.LeadTime):
@@ -197,13 +202,13 @@ def ConstrucMILPModel(AllOrders,Products, RawMaterials, WorkCenters,CustomerTole
                       
          
                       
-          for i in range(len(rawmaterial.StockLevels)):
-                rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
+          # for i in range(len(rawmaterial.StockLevels)):
+          #       rawmaterial.TargetVars[i].ub = rawmaterial.StockLevels[i] #upperbound stocklevels
           
           
-          # for i in range(tau_value):
-          #      if rawmaterial.PN in RawMaterials10:
-          #          rawmaterial.TargetVars[i].ub = RawMaterials10[rawmaterial.PN] * 0.25
+          for i in range(tau_value):
+                  if rawmaterial.PN in RawMaterials15:
+                      rawmaterial.TargetVars[i].ub = RawMaterials15[rawmaterial.PN] * 0.1
                    
             
                     
@@ -388,35 +393,46 @@ def SolveWhatModel(primal,H2M,W2D,timelimit,tau_value,Orders,Products,RawMateria
             #             NormalOrdersRejected += 1
             # print('NormalOrders:', NormalOrders, ' Rejected:', NormalOrdersRejected)
             # print('PrioOrders:', PrioOrders, ' Rejected:', PrioOrdersRejected)
-        RawMaterials10 = ['6782-1401-4201_rw',
+        RawMaterials15 = ['6782-1401-4201_rw',
         '6808-1400-0302_rw',
         '6808-1500-5401_rw',
         '6782-1401-0002_rw',
         '6808-1500-5305_rw',
         '6808-1800-0101_rw',
         '6661-1100-2804_rw',
+        '6761-1200-5901_rw',
+        '6649-1600-2300_rw',
         '6298-1400-7005_rw',
         '6142-1100-2202_rw',
-        '6298-1100-0611_rw']
+        '6298-1100-0611_rw',
+        '6649-1600-2200_rw',
+        '6318-1800-4205_rw',
+        '6966-1700-1602_rw']
 
-        
-        def RecursiveQuantityRW(Product, quantity,RawMaterials10, myOrder): 
+        # print(len(Product.RawMaterials))
+        def RecursiveQuantityRW(Product, quantity, RawMaterials15, myOrder): 
             for myRaw in Product.RawMaterials:
-                if myRaw.PN in RawMaterials10:
-                    print('OrderID: ' , myOrder.OrderID, 'Rejected: ', myOrder.RejectVar.x, 'FinalProduct: ',myOrder.Product.PN, 'OrderQuantity: ', myOrder.SQuantity,  'PN: ', myRaw.PN, 'Quantity: ', quantity)
+                # print(myRaw)
+                if myRaw.PN in RawMaterials15:
+                    print('OrderID: ' , myOrder.OrderID, 'Rejected: ', myOrder.RejectVar.x, 'FinalProduct: ',
+                          myOrder.Product.PN, 'OrderQuantity: ', myOrder.SQuantity,  'PN: ', myRaw.PN, 'Quantity: ', quantity)
             for myProd, ProdMultiplier in Product.Predecessors:
                 quantity = quantity * ProdMultiplier
                 Product = myProd
-                RecursiveQuantityRW(Product, quantity,RawMaterials10, myOrder)
+                RecursiveQuantityRW(Product, quantity,RawMaterials15, myOrder)
             
                 
-                
+           
+        print(len(Orders))
+    
         for order in Orders.values():
             # if order.RejectVar.x < 0.5:
             # if order.SQuantity > 0:
             FinalProduct = order.Product
             FinalQuantity = order.SQuantity
-            RecursiveQuantityRW(FinalProduct, FinalQuantity,RawMaterials10, order)
+            RecursiveQuantityRW(FinalProduct, FinalQuantity,RawMaterials15, order)
+            
+            
             
     return acceptedorders
 
@@ -508,10 +524,10 @@ def PrintProductionTargets(Products, tau_value,optimal):
            trgreqstr+=','+str(round(targetval,0))
            trgtotal +=targetval
            total+=productval
-       # if total > 0:
-       #      print('     >'+prodreqstr)   
-       # if trgtotal > 0:
-       #     print('     >'+trgreqstr)
+           # if total > 0:
+           #     print('     >'+prodreqstr)   
+           #     if trgtotal > 0:
+                   # print('     >'+trgreqstr)
        
 
 
@@ -521,6 +537,7 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     print('   >> WHAT Model results: Raw Material Targets..')
    
     top10 = {}
+    kcritical = []
      
     for rawmaterial in RawMaterials.values():
         total = 0
@@ -542,11 +559,18 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
             rawreqstr+=','+str(round(rawval,0))
             total+=rawval
         # if total > 0:
-            # print('     >'+rawreqstr)
+        #     print('     >'+rawreqstr)
        
-        # for day in range(5): #Slack materials only bounded (by 0) in the bounded period, until we have inventory so day 1,2,3
-        #      if day <= 2:
-        #          rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
+      
+    #     for day in range(3): #Slack materials only bounded (by 0) in the bounded period, until we have inventory so day 1,2,3
+    #         rawmaterial.Slack.append(rawmaterial.StockLevels[day] - rawmaterial.TargetVars[day].x)
+    #         print(rawmaterial.PN, rawmaterial.StockLevels[2], "&", rawmaterial.TargetVars[2].x)
+    #         print(rawmaterial.PN,'day ', day, rawmaterial.Slack)
+    #         if rawmaterial.Slack[day] == 0:
+    #                 kcritical.append(rawmaterial.PN)
+        
+    # print(kcritical)
+    # print(len(kcritical))
         #      if day >= 3:
         #          rawmaterial.Slack.append(rawmaterial.StockLevels[2] - rawmaterial.TargetVars[day].x)
                   
@@ -557,11 +581,11 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
        
        
              
-        if rawmaterial.TargetVars[day].x > 0:
-            # print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))
-            top10[rawmaterial.PN] = round(rawmaterial.TargetVars[4].x,0)
+    #     if rawmaterial.TargetVars[2].x > 0:
+    #         print(rawmaterial.PN, "day", day,":", round(rawmaterial.TargetVars[4].x,0))
+    #         top10[rawmaterial.PN] = round(rawmaterial.TargetVars[2].x,0)
     # print(top10)
-
+        
 
             
     # print(top10)
@@ -613,17 +637,17 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     # plt.title("No. of accepted and rejected orders, without considering raw material availability") #10^2
     # plt.show()
     
-    # Class = [5, 6, 7, 8, 9, 10]
-    # Accepted = [8, 16, 14, 15, 21, 17]
-    # Rejected = [39, 48, 65, 72, 82, 96]
-    # w = 0.8
-    # plt.bar(Class, Accepted, w, label="Accepted order")
-    # plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
-    # plt.xlabel("Time horizon")
-    # plt.ylabel("No. of orders")
-    # plt.title("No. of accepted and rejected orders, with considering raw material availability") #10^2
-    # plt.legend()
-    # plt.show()
+    Class = [5, 6, 7, 8, 9, 10]
+    Accepted = [8, 16, 14, 15, 21, 17]
+    Rejected = [39, 48, 65, 72, 82, 96]
+    w = 0.8
+    plt.bar(Class, Accepted, w, label="Accepted order")
+    plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
+    plt.xlabel("Time horizon")
+    plt.ylabel("No. of orders")
+    plt.title("No. of accepted and rejected orders, with considering raw material availability") #10^2
+    plt.legend()
+    plt.show()
     
     # fig = plt.figure()
     # ax = fig.add_axes([0,0,1,1])
@@ -635,7 +659,67 @@ def PrintRawMaterialTargets(RawMaterials,tau_value,optimal):
     # ax.set_title('Number of rejected orders per upper bound')
     # plt.show()
     
-               
+    # Class = ["100%", "75%", "50%", "25%", "10%"]
+    # Accepted = [47, 36, 35, 31, 27]
+    # Rejected = [0, 11, 12, 16, 20]
+    # ax = plt.gca()
+    # # ax.set_xlim([xmin, xmax])
+    # ax.set_ylim([0, 50])
+    # # ax.bar_label(ax.containers[0])
+    # w = 0.8
+    # plt.bar(Class, Accepted, w, label="Accepted order")
+    # plt.bar(Class, Rejected, w, bottom=Accepted, label="Rejected orders")
+    # plt.xlabel("Bound")
+    # plt.ylabel("No. of orders")
+    # plt.title("No. of accepted and rejected orders") #10^2
+    # plt.legend()
+    # plt.show()
+    
+    
+    # Data Visualization using Python
+# Dot Plot
+
+#import matplotlib.pyplot as plt
+    # x = [96,93,87,92,195,3,68,49,53,1695,78,191,1023,140,1315,282,16,111,128,15]
+    x = ['10%', '75%', '50%', "25%", "10%" ,92,195,3,68,49,53,1695,78,191,1023,140,1315,282,16,111]
+    # y = ['25', '50', '75', '100']
+    xi = list(range(len(x)))
+    # yi = list(range(len(y)))
+    # plotting using plt.pyplot()
+    plt.plot([100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100], 'go')
+    
+    plt.plot([75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75,75],  'ro')
+    plt.plot([75,75,75,75,75,75,75,75,75],'go'), 
+    
+    plt.plot([50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50,50], 'ro')
+    plt.plot([50,50,50,50,50,50,50,50,50], 'go')
+    plt.plot([50,50,50], 'ro')
+    plt.plot([50,50], 'go')
+    
+    
+    plt.plot([25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25], 'ro')
+    plt.plot([25,25,25,25,25,25,25], 'go')
+    plt.plot([25,25,25,25,25], 'ro')
+    plt.plot([25,25,25,25,25], 'ro')
+    plt.plot([25,25], 'go')
+    
+    # plt.plot([10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10], 'ro')
+    plt.plot([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], 'ro')
+     
+    # axis labeling
+    plt.xticks(xi, x)
+    plt.xticks(rotation=90)
+    # plt.yticks(yi, y)
+    plt.xlabel('OrderID')
+    plt.ylabel('Bound')
+    
+    # figure name
+    plt.title('Order accepting')
+
+    
+    ##########################################
+    ##########################################
+
            
        # x = np.array([1, 2, 3, 4, 5])
        # y = [rawmaterial.StockLevels[0], rawmaterial.StockLevels[1], rawmaterial.StockLevels[2], rawmaterial.StockLevels[2], rawmaterial.StockLevels[2]]

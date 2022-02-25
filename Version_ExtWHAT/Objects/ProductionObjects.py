@@ -27,7 +27,7 @@ class AMEWorkcenter:
         self.Tasks = []
         self.TasksToSchedule = []
         self.Jobs = []
-        self.Schedules= dict()
+        self.Schedules = dict()
         
         self.MachineGroups =[]
         self.MachSubsetCons = []
